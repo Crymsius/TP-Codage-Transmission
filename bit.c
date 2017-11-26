@@ -64,7 +64,7 @@ Booleen prend_bit(unsigned long c,	     /* L'entier où on prend le bit */
           )
 {
     //AND logique entre c et la position PUIS test égalité avec la position.
-    return (pow2(position) & c)!=0;
+    return (pow2(position) & c) != 0;
 }
 
 /*

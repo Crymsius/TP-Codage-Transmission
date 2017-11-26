@@ -59,39 +59,47 @@ void put_entier(struct bitstream *b, unsigned int f)
 
 unsigned int get_entier(struct bitstream *b)
 {
-	// unsigned int a;
+	unsigned int prefixe = get_bits(b, 2);
+	unsigned int nb_bits = 0;
+	unsigned int result = 0;
+	unsigned int temp = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+	if (prefixe == 0)
+		return 0;
+	else if (prefixe == 1) {
+		prefixe = get_bits(b, 1);
+		if (prefixe == 0)
+			return 1;
+		else
+			nb_bits = 1;
+	} else if (prefixe == 2) {
+		prefixe = get_bits(b, 2);
+		temp = 0;
+		nb_bits = 2;
+		while (temp < prefixe) {
+			temp++;
+			nb_bits++;
+		}
+	} else if (prefixe == 3) {
+		prefixe = get_bits(b, 3);
+		temp = 0;
+		nb_bits = 6;
+		while (temp < prefixe && temp < 7) {
+			temp++;
+			nb_bits++;
+		}
+		if (prefixe == 7) {
+			prefixe = get_bits(b, 1);
+			temp = 0;
+			while (temp < prefixe) {
+				temp++;
+				nb_bits++;
+			}
+		}
+	}
+	result = get_bits(b, nb_bits);
+	result = pose_bit(result, nb_bits, Vrai);
+	return result;
 }
 
 /*
@@ -111,25 +119,23 @@ return 0 ; /* pour enlever un warning du compilateur */
 
 void put_entier_signe(struct bitstream *b, int i)
 {
-
-
-
-
-
-
-
-
-
-
+	if (i >= 0) {
+		put_bit(b, Faux);
+		put_entier(b, (unsigned int) i);
+	} else {
+		i = -i;
+		put_bit(b, Vrai);
+		put_entier(b, (unsigned int) i-1);
+	}
 }
 /*
  *
  */
 int get_entier_signe(struct bitstream *b)
 {
-
-
-
-
-return 0 ; /* pour enlever un warning du compilateur */
+	unsigned int sign = get_bits(b, 1);
+	if (sign == 0)
+		return get_entier(b);
+	else
+		return - get_entier(b) - 1;
 }

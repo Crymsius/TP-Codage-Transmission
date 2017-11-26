@@ -249,7 +249,7 @@ void get_entier_shannon_fano_tst()
   int i, j, k ;
   int (*t[])(int) = { simple, aleatoire, aleatoire2 } ;
   char *tt[] =  { "les nombres successif entre -1000 et 1000",
-		  "2000 nombres aléatoires entre 0 et 49 inclus"
+		  "2000 nombres aléatoires entre 0 et 49 inclus",
 		  "2000 nombres aléatoires entre 0 et 49 inclus en gaussienne"
   } ;
   for(k=0; k < TAILLE(t); k++)
