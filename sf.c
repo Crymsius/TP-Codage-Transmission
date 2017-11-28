@@ -31,7 +31,7 @@ struct shannon_fano
 struct shannon_fano* open_shannon_fano()
 {
   struct shannon_fano* sf;
-  ALLOUER(sf, 200000) ;
+  ALLOUER(sf, 200000);
   sf->nb_evenements = 1;
   sf->evenements[0].valeur = VALEUR_ESCAPE;
   sf->evenements[0].nb_occurrences = 1;

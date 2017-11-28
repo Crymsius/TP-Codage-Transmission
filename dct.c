@@ -19,14 +19,13 @@
 
 void coef_dct(Matrice *table)
 {
-
-
-
-
-
-
-
-
+	int n = table->height;
+	int i,j;
+	for (j=0; j < n; j++) {
+		for (i=0; i < n; i++) {
+				table->t[j][i] = (j == 0 ? 1 : sqrt(2) * cos(j*M_PI*(2*i+1)/(2*n))) /sqrt(n);
+		}
+	}
 }
 
 /*
@@ -42,19 +41,16 @@ void dct(int   inverse,		/* ==0: DCT, !=0 DCT inverse */
 	 float *sortie		/* Le son après transformation */
 	 )
 {
+	Matrice * coefs;
+	coefs = allocation_matrice_float(nbe,nbe);
+	coef_dct(coefs);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	if(inverse){
+		Matrice * inv_coefs;
+		inv_coefs = allocation_matrice_float(nbe,nbe);
+		transposition_matrice(coefs, inv_coefs);
+		produit_matrice_vecteur(inv_coefs, entree, sortie);
+	} else {
+		produit_matrice_vecteur(coefs, entree, sortie);
+	}
 }

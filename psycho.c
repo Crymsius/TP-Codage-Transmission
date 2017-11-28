@@ -28,20 +28,12 @@
 
 void psycho(int nbe, float *dct, float c)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    int i,j;
+    for (i=1; i<nbe-1; i++){
+        for(j=1; j<nbe-1; j++){
+            if (i!=j && c * fabs(dct[i]) < fabs( dct[j] / (j - i) ))
+                dct[i] = 0;
+        }
+    }
 }
 
