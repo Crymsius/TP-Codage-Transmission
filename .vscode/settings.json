@@ -3,5 +3,6 @@
         "bits.h": "c",
         "bitstream.h": "c",
         "matrice.h": "c"
-    }
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

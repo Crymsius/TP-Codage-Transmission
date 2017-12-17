@@ -140,18 +140,14 @@ static void incremente_et_ordonne(struct shannon_fano *sf, int position)
   sf->evenements[position].nb_occurrences++;
 
   if (position) {
-    int temp_valeur = sf->evenements[position].valeur;
-    int temp_nb_occurrences = sf->evenements[position].nb_occurrences;
+    struct evenement temp_event = sf->evenements[position];
     int i = position - 1;
     while (sf->evenements[i].nb_occurrences < sf->evenements[position].nb_occurrences && i >= 0)
     {
       i--;
     }
-    sf->evenements[position].valeur = sf->evenements[i+1].valeur;
-    sf->evenements[position].nb_occurrences = sf->evenements[i+1].nb_occurrences;
-
-    sf->evenements[i+1].valeur = temp_valeur;
-    sf->evenements[i+1].nb_occurrences = temp_nb_occurrences;
+    sf->evenements[position] = sf->evenements[i+1];
+    sf->evenements[i+1] = temp_event;
   }
 }
 

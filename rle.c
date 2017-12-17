@@ -37,42 +37,26 @@
  */
 
 /*
- * Stocker le tableau de flottant dans les deux "instream"
+ * Stocker le tableau de flottant dans les deux "intstream"
  * En perdant le moins d'information possible.
  */
 
 void compresse(struct intstream *entier, struct intstream *entier_signe
 	       , int nbe, const float *dct)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	int i;
+	int zeros=0;
+	for (i=0; i < nbe; i++){
+		if(round(dct[i]) == 0.0 ) {
+			zeros++;
+		} else {
+			put_entier_intstream(entier, zeros);
+			put_entier_intstream(entier_signe, round(dct[i]));
+			zeros = 0;
+		}
+	}
+	if (zeros)
+		put_entier_intstream(entier, zeros);
 }
 
 /*
@@ -82,7 +66,22 @@ void compresse(struct intstream *entier, struct intstream *entier_signe
 void decompresse(struct intstream *entier, struct intstream *entier_signe
 		 , int nbe, float *dct)
 {
-
+	int i = 0;
+	int zeros = 0;
+	while (i < nbe) {
+		if (zeros) {
+			dct[i] = 0;
+			zeros--;
+			i++;
+		}
+		else {
+			if (i) {
+				dct[i] = get_entier_intstream(entier_signe);
+				i++;
+			}
+			zeros = get_entier_intstream(entier);
+		}
+	}
 
 
 
