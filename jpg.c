@@ -41,14 +41,15 @@ void dct_image(int inverse, int nbe, Matrice *image)
  */
 void quantification(int nbe, int qualite, Matrice *extrait, int inverse)
 {
-
-
-
-
-
-
-
-
+  for (int j=0; j < extrait->height; j++) {
+    for (int i=0; i < extrait->width; i++) {
+      if (inverse) {
+        extrait->t[j][i] = extrait->t[j][i]*(1.+(j+i+1.) * qualite);
+      } else {
+        extrait->t[j][i] = extrait->t[j][i]/(1.+(j+i+1.) * qualite);
+      }
+    }
+  }
 }
 /*
  * ZIGZAG.
@@ -75,24 +76,33 @@ void quantification(int nbe, int qualite, Matrice *extrait, int inverse)
  */
 void zigzag(int nbe, int *y, int *x)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  if ((*x + *y) % 2) {
+    // diagonales bas gauches
+    if (*y != nbe-1) {
+      //tout sauf dernière ligne
+      *y += 1;
+      if (*x != 0) {
+        //tout sauf première colonne
+        *x -= 1;
+      }
+    } else {
+      //dernière ligne
+      *x += 1;
+    }
+  } else {
+    // diagonales haut droites
+    if (*x != nbe-1) {
+      //tout sauf dernière colonne
+      *x += 1;
+      if (*y != 0) {
+        //tout sauf première ligne
+        *y -= 1;
+      }
+    } else {
+      //dernière colonne
+      *y += 1;
+    }
+  }
 }
 /*
  * Extraction d'une matrice de l'image (le résultat est déjà alloué).
