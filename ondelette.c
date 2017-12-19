@@ -245,43 +245,44 @@ void ondelette_2d_inverse(Matrice *image)
   Matrice *image_transpose = allocation_matrice_float(image->width, image->height);
 
   int length = MAX(nb_bits_utile(image->height), nb_bits_utile(image->width));
-
-  int height = 1;
-  int width = 1;
+  int height = image->height;
+  int width = image->width;
   int heights[length];
   int widths[length];
-  
+
   int i = 0;
+  heights[i] = height;
+  widths[i] = width;
+
   while (height != 1 || width != 1) {
+    i++;
     if (height % 2) {
-        height = (height + 1)/2;
-      } else {
-        height /= 2;
-      }
-      if (width % 2) {
-        width = (width + 1)/2;
-      } else {
-        width /= 2;
-      }
-      heights[i] = height;
-      widths[i] = width;
-      i++;
+      height = (height + 1)/2;
+    } else {
+      height /= 2;
+    }
+    if (width % 2) {
+      width = (width + 1)/2;
+    } else {
+      width /= 2;
+    }
+    heights[i] = height;
+    widths[i] = width;
+    length = i;
   }
 
-  for (int i = length-1; i>= 0; i--) {
-    for (int j = 0; j < heights[i]; j++) {
-      ondelette_1d_inverse(image->t[j], image_temp->t[j], widths[i]);
-    }
-    transposition_matrice_partielle(image_temp, image_temp_transpose, heights[i], widths[i]);
+  for (int i = length -1; i >= 0; i--) {
+    transposition_matrice_partielle(image, image_transpose, heights[i], widths[i]);
 
     for (int j = 0; j < widths[i]; j++) {
-      ondelette_1d_inverse(image_temp_transpose->t[j], image_transpose->t[j], heights[i]);
+      ondelette_1d_inverse(image_transpose->t[j], image_temp_transpose->t[j], heights[i]);
     }
 
-    transposition_matrice_partielle(image_transpose, image, widths[i], heights[i]);
+    transposition_matrice_partielle(image_temp_transpose, image_temp, widths[i], heights[i]);
 
-    printf("\nheight : %d", heights[i]);
-    printf("\nwidth : %d", widths[i]);
+    for (int j = 0; j < heights[i]; j++) {
+      ondelette_1d_inverse(image_temp->t[j], image->t[j], widths[i]);
+    }
   }
 
   liberation_matrice_float(image_transpose);
