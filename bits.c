@@ -10,8 +10,8 @@
 
 void put_bits(struct bitstream *b, unsigned int nb, unsigned long v)
 {
-    int pos = nb - 1;
-    for (pos; pos >= 0; pos--)
+    int pos;
+    for (pos = nb - 1; pos >= 0; pos--)
         put_bit(b, prend_bit(v, pos));
 }
 
@@ -27,8 +27,8 @@ void put_bits(struct bitstream *b, unsigned int nb, unsigned long v)
 unsigned int get_bits(struct bitstream *b, unsigned int nb)
 {
     unsigned int a = 0;
-    int pos = nb - 1;
-    for (pos; pos >= 0; pos--)
+    int pos;
+    for (pos = nb - 1; pos >= 0; pos--)
         a = pose_bit(a, pos, get_bit(b));
     return a;
 }
@@ -44,7 +44,6 @@ unsigned int get_bits(struct bitstream *b, unsigned int nb)
 void put_bit_string(struct bitstream *b, const char *bits)
 {
     while (*bits != '\0') {
-        put_bit(b, (*bits != '0'));
-        *bits++;
+        put_bit(b, (*bits++ != '0'));
     }
 }
