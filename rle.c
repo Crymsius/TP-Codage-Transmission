@@ -69,17 +69,15 @@ void decompresse(struct intstream *entier, struct intstream *entier_signe
 	int i = 0;
 	int zeros = 0;
 	while (i < nbe) {
-		if (zeros) {
+		zeros = get_entier_intstream(entier);		
+		while (zeros > 0) {
 			dct[i] = 0;
 			zeros--;
 			i++;
 		}
-		else {
-			if (i) {
-				dct[i] = get_entier_intstream(entier_signe);
-				i++;
-			}
-			zeros = get_entier_intstream(entier);
+		if (i < nbe) {
+			dct[i] = get_entier_intstream(entier_signe);
+			i++;
 		}
 	}
 

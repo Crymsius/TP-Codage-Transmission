@@ -113,16 +113,8 @@ void ondelette_2d(Matrice *image)
 
     transposition_matrice_partielle(image_transpose, image, width, height);
 
-    if (height % 2) {
-      height = (height + 1)/2;
-    } else {
-      height /= 2;
-    }
-    if (width % 2) {
-      width = (width + 1)/2;
-    } else {
-      width /= 2;
-    }
+    height = (height + 1)/2;
+	width = (width + 1)/2;
   }
 
   liberation_matrice_float(image_transpose);
@@ -140,22 +132,27 @@ void ondelette_2d(Matrice *image)
 
 void quantif_ondelette(Matrice *image, float qualite)
 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	int height = image->height;
+	int width = image->width;
+	
+	while ((height != 1 || width != 1) && qualite > 1) {
+		int half_height = (height + 1)/2;
+		int half_width = (width + 1)/2;
+		for (int j = 0; j < half_height; j++) {
+			for (int i = half_width; i < width; i++) {
+				image->t[j][i] /= qualite;
+			}
+		}
+		for (int j = half_height; j < height; j++) {
+			for (int i = 0; i < width; i++) {
+				image->t[j][i] /= qualite;
+			}
+		}
+		height = (height + 1)/2;
+		width = (width + 1)/2;
+		qualite /= 8.;
+	}
+	
 }
 
 /*
@@ -243,10 +240,12 @@ void ondelette_2d_inverse(Matrice *image)
   Matrice *image_temp = allocation_matrice_float(image->height, image->width);
   Matrice *image_temp_transpose = allocation_matrice_float(image->width, image->height);
   Matrice *image_transpose = allocation_matrice_float(image->width, image->height);
-
-  int length = MAX(nb_bits_utile(image->height), nb_bits_utile(image->width));
+	
   int height = image->height;
   int width = image->width;
+  int nb_bit_width = nb_bits_utile(width - 1);
+  int nb_bit_height = nb_bits_utile(height - 1);
+  int length = MAX(nb_bit_height, nb_bit_width);
   int heights[length];
   int widths[length];
 
@@ -256,16 +255,8 @@ void ondelette_2d_inverse(Matrice *image)
 
   while (height != 1 || width != 1) {
     i++;
-    if (height % 2) {
-      height = (height + 1)/2;
-    } else {
-      height /= 2;
-    }
-    if (width % 2) {
-      width = (width + 1)/2;
-    } else {
-      width /= 2;
-    }
+    height = (height + 1)/2;
+	width = (width + 1)/2;
     heights[i] = height;
     widths[i] = width;
     length = i;
@@ -294,7 +285,26 @@ void ondelette_2d_inverse(Matrice *image)
 void dequantif_ondelette(Matrice *image, float qualite)
 {
 
-
+	int height = image->height;
+	int width = image->width;
+	
+	while ((height != 1 || width != 1) && qualite > 1) {
+		int half_height = (height + 1)/2;
+		int half_width = (width + 1)/2;
+		for (int j = 0; j < half_height; j++) {
+			for (int i = half_width; i < width; i++) {
+				image->t[j][i] *= qualite;
+			}
+		}
+		for (int j = half_height; j < height; j++) {
+			for (int i = 0; i < width; i++) {
+				image->t[j][i] *= qualite;
+			}
+		}
+		height = (height + 1)/2;
+		width = (width + 1)/2;
+		qualite /= 8.;
+	}
 
 
 }
